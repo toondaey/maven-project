@@ -31,7 +31,7 @@ pipeline {
 			parallel {
 				stage("Staging") {
 					steps {
-						sh "scp -i '~/Downloads/jenkins-demo.pem' **/target/*.war ssh ec2-user@${params.tomcat_staging}:/var/lib/tomcat7/webapp"
+						sh "scp -i '/Users/toonday/Downloads/jenkins-demo.pem' **/target/*.war ssh ec2-user@${params.tomcat_staging}:/var/lib/tomcat7/webapp"
 					}
 					post {
 						success {
@@ -44,7 +44,7 @@ pipeline {
 						timeout (time: 5, unit: "DAYS") {
 							input message: "Deploy to production?"
 						}
-						sh "scp -i '~/Downloads/jenkins-demo.pem' **/target/*.war ssh ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapp"
+						sh "scp -i '/Users/toonday/Downloads/jenkins-demo.pem' **/target/*.war ssh ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapp"
 					}
 					post {
 						success {
