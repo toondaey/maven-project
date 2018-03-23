@@ -6,8 +6,8 @@ pipeline {
     }
 
     parameters {
-    	string (name: "tomcat_staging", defaultValue: "ec2-13-59-243-42.us-east-2.compute.amazonaws.com", description: "Staging server")
-    	string (name: "tomcat_prod", defaultValue: "ec2-18-218-236-204.us-east-2.compute.amazonaws.com", description: "Production server")
+    	string (name: "tomcat_staging", defaultValue: "13.59.243.42", description: "Staging server")
+    	string (name: "tomcat_prod", defaultValue: "18.218.236.204", description: "Production server")
     	string (name: "artifactLocale", defaultValue: "**/target/*.war", description: "Location of artifacts.")
     }
 
