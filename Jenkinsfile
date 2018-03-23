@@ -7,7 +7,8 @@ pipeline {
 
     parameters {
     	string (name: "tomcat_staging", defaultValue: "ec2-13-59-243-42.us-east-2.compute.amazonaws.com", description: "Staging server")
-    	string (name: "tomcat_prod", defaultValue: "ec2-18-218-236-204.us-east-2.compute.amazonaws.com", description: "Production server")
+    	string (name: "tomcat_prod", defaultValue: "ec2-18-218-236-204.us-east-2.compute.amazonaws.com", description: "Production server"),
+    	string (name: "artifactLocale", defaultValue: "**/target/*.war", description: "Location of artifacts.")
     }
 
     triggers {
@@ -22,16 +23,16 @@ pipeline {
 			post {
 				success {
 					echo 'Archiving artifacts...'
-					archiveArtifacts artifacts: "**/target/*.war"
+					archiveArtifacts artifacts: "${params.artifactLocale}"
 				}
 			}
 		}
 
 		stage ("Deployment") {
 			parallel {
-				stage("Staging") {
+				stage ("Staging") {
 					steps {
-						sh "scp -i '/Users/toonday/Tunde/Personal/jenkins-demo.pem' **/target/*.war ssh ec2-user@${params.tomcat_staging}:/var/lib/tomcat7/webapps"
+						sh 'scp -i "/Users/toonday/Tunde/Personal/jenkins-demo.pem" ${params.artifactLocale} ssh ec2-user@${params.tomcat_staging}:/var/lib/tomcat7/webapps'
 					}
 					post {
 						success {
@@ -39,12 +40,12 @@ pipeline {
 						}
 					}
 				}
-				stage("Production") {
+				stage ("Production") {
 					steps {
 						timeout (time: 5, unit: "DAYS") {
 							input message: "Deploy to production?"
 						}
-						sh "scp -i '/Users/toonday/Tunde/Personal/jenkins-demo.pem' **/target/*.war ssh ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapps"
+						sh 'scp -i "/Users/toonday/Tunde/Personal/jenkins-demo.pem" ${params.artifactLocale} ssh ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapps'
 					}
 					post {
 						success {
