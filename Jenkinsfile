@@ -40,10 +40,10 @@ pipeline {
 					}
 				}
 				stage("Production") {
-					timeout (time: 5, unit: "DAYS") {
-						input message: "Deploy to production?"
-					}
 					steps {
+						timeout (time: 5, unit: "DAYS") {
+							input message: "Deploy to production?"
+						}
 						sh "scp -i '~/Downloads/jenkins-demo.pem' **/target/*.war ssh ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapp"
 					}
 					post {
